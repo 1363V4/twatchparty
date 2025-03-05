@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TwatchParty</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-beta.7/bundles/datastar.js"></script>
+</head>
+<body>
+    <div class="homepage">
+        <h1>TwatchParty</h1>
+
+        <div id="index-div">
+            <button
+            class="cloak streamer-button"
+            data-on-click="@get('/stream-list')"
+            >Enter</button>
+        </div>
+    </div>
+</body>
+</html>
