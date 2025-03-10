@@ -155,7 +155,7 @@ class Arena:
 
     def customize_html(self, user_id, parent):
         """Customize arena HTML for specific user."""
-        user_soup = BeautifulSoup(str(self.base_soup), 'html.parser')
+        user_soup = self.base_soup
         
         # Update iframe src
         iframe = user_soup.find('iframe')
