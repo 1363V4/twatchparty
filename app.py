@@ -28,28 +28,30 @@ fake = Faker()
 class Arena:
     """Class representing a virtual arena for a streamer."""
     def __init__(
-            self, 
-            channel: str, 
-            name: str, 
-            max_seats: int = 12, 
-            seats: Dict[str, Optional[str]] = None, 
-            user_seats: Dict[str, str] = None, 
-            html: Optional[str] = None
+            self,
+            channel: str,
+            name: str,
+            tiers: int = 8,
+            seats_per_tier: int = 5,
+            seats: Dict[str, Optional[str]] = None,
+            user_seats: Dict[str, str] = None
             ):
         self.channel = channel
         self.name = name
-        self.max_seats = max_seats
+        self.tiers = tiers
+        self.seats_per_tier = seats_per_tier
+        self.max_seats = tiers * seats_per_tier * 2  # 2 sides: left and right
         self.seats = seats if seats is not None else defaultdict(lambda: None)
         self.user_seats = user_seats if user_seats is not None else defaultdict(lambda: None)
         self.emotes = []  # [(user_id, emote_id, timestamp)]
         self.emote_scales = {}
         self.base_soup = None
-        self.emotes_soup = None  
+        self.emotes_soup = None
 
         if not self.seats:
             for side in ['left', 'right']:
-                for tier in range(4):
-                    for seat in range(3):
+                for tier in range(self.tiers):
+                    for seat in range(self.seats_per_tier):
                         self.seats[f"{side}_{tier}_{seat}"] = None
 
         self.generate_html()
@@ -59,13 +61,13 @@ class Arena:
         current_time = time.time()
         # Only consider emotes from last 2 seconds for combo scaling
         recent_cutoff = current_time - 2
-        
+
         # Count recent emotes by user and type
         user_emote_counts = defaultdict(int)
         for user_id, emote_id, timestamp in self.emotes:
             if timestamp >= recent_cutoff:
                 user_emote_counts[(user_id, emote_id)] += 1
-        
+
         # Calculate scales (max 2x for 5+ identical emotes)
         self.emote_scales = {}
         for (user_id, emote_id), count in user_emote_counts.items():
@@ -76,11 +78,11 @@ class Arena:
         """Generate HTML for the arena with current seat occupancy."""
         left_seats = ""
         right_seats = ""
-        
+
         for side in ['left', 'right']:
-            for tier in range(4):
+            for tier in range(self.tiers):
                 tier_html = f'<div class="tier tier-{tier}">'
-                for seat in range(3):
+                for seat in range(self.seats_per_tier):
                     seat_id = f"{side}_{tier}_{seat}"
                     anchor_name = "--" + seat_id
                     if not self.seats[seat_id]:
@@ -102,12 +104,12 @@ class Arena:
                     '''
                     tier_html += seat_html
                 tier_html += '</div>'
-                
+
                 if side == 'left':
                     left_seats += tier_html
                 else:
                     right_seats += tier_html
-        
+
         buttons_html = "".join(
             f'''<div 
             class="emote-button" 
@@ -116,7 +118,7 @@ class Arena:
             </div>'''
             for i in range(8)
         )
-        
+
         raw_html = f'''
         <div id="arena-root" class="arena-container">
             <div class="emote-buttons">{buttons_html}</div>

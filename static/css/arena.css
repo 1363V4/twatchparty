@@ -9,6 +9,10 @@ body {
     display: grid;
 }
 
+img {
+    border-radius: 10px;
+}
+
 /* Mobile rotation guidance */
 @media (max-width: 767px) and (orientation: portrait) {
     body::before {
@@ -184,37 +188,15 @@ body {
 
 .emote {
     position: absolute;
-    position-area: top right;
+    position-area: top;
     animation: bubble-fade 5s forwards;
 }
 
 @keyframes bubble-fade {
-    0% { opacity: 0; transform: translateY(20px); }
+    0% { opacity: 0; transform: translateY(10px); }
     10% { opacity: 1; transform: translateY(0); }
     80% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-20px); }
-}
-
-/* Alert */
-.too-slow-alert {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ff5555;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    z-index: 1000;
-    animation: alert-fade 2s forwards;
-}
-
-@keyframes alert-fade {
-    0% { opacity: 0; transform: translate(-50%, -20px); }
-    10% { opacity: 1; transform: translate(-50%, 0); }
-    80% { opacity: 1; }
-    100% { opacity: 0; transform: translate(-50%, -20px); }
+    100% { opacity: 0; transform: translateY(-10px); }
 }
 
 /* Loading */
@@ -227,7 +209,3 @@ body {
     font-size: 1.5rem;
 }
 
-
-img {
-    border-radius: 10px;
-}
